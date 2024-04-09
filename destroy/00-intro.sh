@@ -53,11 +53,11 @@ while [ $COUNTER -ne 0 ]; do
 	COUNTER=$(kubectl get managed --no-headers | grep -v database | grep -v object | grep -v release | wc -l)
 done
 
-if [[ "$HYPERSCALER" == "google" ]]; then
+# if [[ "$HYPERSCALER" == "google" ]]; then
 
-	gcloud projects delete $PROJECT_ID --quiet
+# 	gcloud projects delete $PROJECT_ID --quiet
 
-fi
+# fi
 
 #########################
 # Control Plane Cluster #
