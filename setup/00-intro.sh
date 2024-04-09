@@ -85,11 +85,11 @@ if [[ "$HYPERSCALER" == "google" ]]; then
 
     gcloud auth login
 
-    PROJECT_ID=dot-$(date +%Y%m%d%H%M%S)
+    PROJECT_ID=sandbox-20230623-kx7bub
 
     echo "export PROJECT_ID=$PROJECT_ID" >> .env
 
-    gcloud projects create ${PROJECT_ID}
+    # gcloud projects create ${PROJECT_ID}
 
     open "https://console.cloud.google.com/billing/linkedaccount?project=$PROJECT_ID"
 
