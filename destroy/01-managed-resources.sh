@@ -37,11 +37,11 @@ Do you have those tools installed?
 # Hyperscaler #
 ###############
 
-if [[ "$HYPERSCALER" == "google" ]]; then
+# if [[ "$HYPERSCALER" == "google" ]]; then
 
-	gcloud projects delete $PROJECT_ID --quiet
+# 	gcloud projects delete $PROJECT_ID --quiet
 
-fi
+# fi
 
 #########################
 # Control Plane Cluster #

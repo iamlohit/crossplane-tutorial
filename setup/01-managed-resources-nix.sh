@@ -44,67 +44,67 @@ if [[ "$HYPERSCALER" == "google" ]]; then
     
     gcloud auth login
 
-    PROJECT_ID=dot-$(date +%Y%m%d%H%M%S)
+    PROJECT_ID=sandbox-20230623-kx7bub
 
     echo "export PROJECT_ID=$PROJECT_ID" >> .env
 
-    gcloud projects create ${PROJECT_ID}
+    # gcloud projects create ${PROJECT_ID}
 
-    echo "
-Please open https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=$PROJECT_ID in a browser and *ENABLE* the API."
+#     echo "
+# Please open https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=$PROJECT_ID in a browser and *ENABLE* the API."
 
-    gum input --placeholder "
-Press the enter key to continue."
+#     gum input --placeholder "
+# Press the enter key to continue."
 
-    export SA_NAME=devops-toolkit
+#     export SA_NAME=devops-toolkit
 
-    export SA="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+#     export SA="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 
-    gcloud iam service-accounts create $SA_NAME \
-        --project $PROJECT_ID
+#     gcloud iam service-accounts create $SA_NAME \
+#         --project $PROJECT_ID
 
-    export ROLE=roles/admin
+#     export ROLE=roles/admin
 
-    gcloud projects add-iam-policy-binding \
-        --role $ROLE $PROJECT_ID --member serviceAccount:$SA
+#     gcloud projects add-iam-policy-binding \
+#         --role $ROLE $PROJECT_ID --member serviceAccount:$SA
 
-    gcloud iam service-accounts keys create gcp-creds.json \
-        --project $PROJECT_ID --iam-account $SA
+#     gcloud iam service-accounts keys create gcp-creds.json \
+#         --project $PROJECT_ID --iam-account $SA
 
-    yq --inplace ".spec.projectID = \"$PROJECT_ID\"" \
-        providers/google-config.yaml
+#     yq --inplace ".spec.projectID = \"$PROJECT_ID\"" \
+#         providers/google-config.yaml
 
-elif [[ "$HYPERSCALER" == "aws" ]]; then
+# elif [[ "$HYPERSCALER" == "aws" ]]; thenz
 
-    AWS_ACCESS_KEY_ID=$(gum input \
-        --placeholder "AWS Access Key ID" \
-        --value "$AWS_ACCESS_KEY_ID")
-    echo "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
+#     AWS_ACCESS_KEY_ID=$(gum input \
+#         --placeholder "AWS Access Key ID" \
+#         --value "$AWS_ACCESS_KEY_ID")
+#     echo "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
     
-    AWS_SECRET_ACCESS_KEY=$(gum input \
-        --placeholder "AWS Secret Access Key" \
-        --value "$AWS_SECRET_ACCESS_KEY" --password)
-    echo "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
+#     AWS_SECRET_ACCESS_KEY=$(gum input \
+#         --placeholder "AWS Secret Access Key" \
+#         --value "$AWS_SECRET_ACCESS_KEY" --password)
+#     echo "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
 
-    AWS_ACCOUNT_ID=$(gum input --placeholder "AWS Account ID" \
-        --value "$AWS_ACCOUNT_ID")
-    echo "export AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> .env
+#     AWS_ACCOUNT_ID=$(gum input --placeholder "AWS Account ID" \
+#         --value "$AWS_ACCOUNT_ID")
+#     echo "export AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> .env
 
-    echo "[default]
-aws_access_key_id = $AWS_ACCESS_KEY_ID
-aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
-" >aws-creds.conf
+#     echo "[default]
+# aws_access_key_id = $AWS_ACCESS_KEY_ID
+# aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
+# " >aws-creds.conf
 
-else
+# else
 
-    AZURE_TENANT_ID=$(gum input --placeholder "Azure Tenant ID" --value "$AZURE_TENANT_ID")
+#     AZURE_TENANT_ID=$(gum input --placeholder "Azure Tenant ID" --value "$AZURE_TENANT_ID")
 
-    az login --tenant $AZURE_TENANT_ID
+#     az login --tenant $AZURE_TENANT_ID
 
-    export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+#     export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 
-    az ad sp create-for-rbac --sdk-auth --role Owner \
-        --scopes /subscriptions/$SUBSCRIPTION_ID \
-        | tee azure-creds.json
+#     az ad sp create-for-rbac --sdk-auth --role Owner \
+#         --scopes /subscriptions/$SUBSCRIPTION_ID \
+#         | tee azure-creds.json
 
 fi
